@@ -186,11 +186,12 @@ if __name__ == '__main__':
         if not (model_name == 'bert' or model_name == 'roberta' or model_name == 'twitter_roberta'):
             layer = list(map(id, _model.gat.parameters()))
             base_params = filter(lambda p: id(p) not in layer, _model.parameters())
-            optimizer = torch.optim.Adam([{'params': base_params},
+            optimizer = torch.optim.AdamW([{'params': base_params},
                                           {'params': _model.gat.parameters(), 'lr': lr_gat},
                                           ], lr=lr_other, weight_decay=wd)
         else:
-            optimizer = torch.optim.Adam(_model.parameters(), lr=lr_other, weight_decay=wd)
+            optimizer = torch.optim.AdamW(_model.parameters(), lr=lr_other, weight_decay=wd)
+        # scheduler = torch.optim.lr_scheduler.PolynomialLR(optimizer, 20, 1.0, verbose=True)
         scheduler = None
 
         trainer = Trainer(

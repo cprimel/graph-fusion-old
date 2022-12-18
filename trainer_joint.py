@@ -161,8 +161,8 @@ class Trainer():
                 if self.clip:
                     torch.nn.utils.clip_grad_norm_(self.model.parameters(), max_norm=10)
                 self.optimizer.step()
-                if self.scheduler is not None:
-                    self.scheduler.step()
+                # if self.scheduler is not None:
+                #     self.scheduler.step()
         end = time.time()
         self.time.append(end - start)
         print(f'process time: {sum(self.time) / (self.epoch + 1)}')
@@ -172,6 +172,9 @@ class Trainer():
         accuracy = accuracy_score(labels_all, y_pred_all)
         recall = recall_score(labels_all, y_pred_all, average='macro')
         precision = precision_score(labels_all, y_pred_all, average='macro')
+
+        if self.scheduler is not None:
+            self.scheduler.step()
 
         print(f'loss = {loss:.4f}')
         print(f'Macro-accuracy = {accuracy:.4f}')
